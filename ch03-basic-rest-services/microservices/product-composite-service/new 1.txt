@@ -1,4 +1,0 @@
-The supplied phased action failed with an exception.
-A problem occurred configuring root project 'ch03_product-composite-service1'.
-A problem occurred evaluating root project 'ch03_product-composite-service1'.
-Project with path ':CH03_API' could not be found in root project 'ch03_product-composite-service1'.
