@@ -58,6 +58,10 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
         productServiceUrl        = "http://" + productServiceHost + ":" + productServicePort + "/product/";
         recommendationServiceUrl = "http://" + recommendationServiceHost + ":" + recommendationServicePort + "/recommendation?productId=";
         reviewServiceUrl         = "http://" + reviewServiceHost + ":" + reviewServicePort + "/review?productId=";
+        
+        LOG.info("productServiceUrl: {}", productServiceUrl);
+        LOG.info("recommendationServiceUrl: {}", recommendationServiceUrl);
+        LOG.info("reviewServiceUrl: {}", reviewServiceUrl);
     }
 
     public Product getProduct(int productId) {

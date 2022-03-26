@@ -21,6 +21,7 @@ public class ProductServiceApplicationTests {
     @Autowired
     private WebTestClient client;
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public void getProductById() {
 
@@ -36,6 +37,7 @@ public class ProductServiceApplicationTests {
             .jsonPath("$.productId").isEqualTo(productId);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public void getProductInvalidParameterString() {
 
@@ -50,6 +52,7 @@ public class ProductServiceApplicationTests {
             .jsonPath("$.message").isEqualTo("Type mismatch.");
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public void getProductNotFound() {
 
@@ -66,6 +69,7 @@ public class ProductServiceApplicationTests {
             .jsonPath("$.message").isEqualTo("No product found for productId: " + productIdNotFound);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public void getProductInvalidParameterNegativeValue() {
 

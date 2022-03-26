@@ -15,3 +15,9 @@ logging:
   level:
     root: INFO
     se.magnus: DEBUG
+  # Output to a file named application.log. 
+#  file:
+#    name: application.log
+#    path: c:\APP  # Output to a file named spring.log in path /Users
+  pattern:
+    file: '%d{dd HH:mm:ss} [%thread] %-5level %logger{10}:%L - %msg%'  ## Logging pattern for file
