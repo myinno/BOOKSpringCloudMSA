@@ -1,10 +1,10 @@
 buildscript {
 	ext {
 		springBootVersion = '2.6.3'
+		swagerVersion = '3.0.0'
 	}
 	repositories {
 		mavenCentral()
-
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -24,12 +24,18 @@ repositories {
 	mavenCentral()
 }
 
-
 dependencies {
 	implementation project(':api')
 	implementation project(':util')
 	implementation('org.springframework.boot:spring-boot-starter-actuator')
 	implementation('org.springframework.boot:spring-boot-starter-webflux')
+	//mod5 start
+   	implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'	
+	//mod5 end
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 	testImplementation('io.projectreactor:reactor-test')
 }
+
+//Swagger 3.0.0
+//SwaggerUI 3.0.0
+

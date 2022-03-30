@@ -29,6 +29,9 @@ repositories {
 dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-webflux')
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
+	//mod5 start
+   	implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'	
+	//mod5 end	
 }
 
 dependencyManagement {
