@@ -2,10 +2,10 @@ package se.magnus.microservices.core.review;
 
 import java.util.ArrayList;
 
-class LandAnimal { public void crying() { System.out.println("À°Áöµ¿¹°"); } }
-class Cat extends LandAnimal { public void crying() { System.out.println("³Ä¿Ë³Ä¿Ë"); } }
-class Dog extends LandAnimal { public void crying() { System.out.println("¸Û¸Û"); } }
-class Sparrow { public void crying() { System.out.println("Â±Â±"); } }
+class LandAnimal { public void crying() { System.out.println("ìœ¡ì§€ë™ë¬¼"); } }
+class Cat extends LandAnimal { public void crying() { System.out.println("ëƒì˜¹ëƒì˜¹"); } }
+class Dog extends LandAnimal { public void crying() { System.out.println("ë©ë©"); } }
+class Sparrow { public void crying() { System.out.println("ì§¹ì§¹"); } }
 
 class AnimalList<T> {
     ArrayList<T> al = new ArrayList<T>();
@@ -17,11 +17,11 @@ class AnimalList<T> {
 
 public class Generic01 {
     public static void main(String[] args) {
-        AnimalList<LandAnimal> landAnimal = new AnimalList<>(); // Java SE 7ºÎÅÍ »ı·«°¡´ÉÇÔ.
+        AnimalList<LandAnimal> landAnimal = new AnimalList<>(); // Java SE 7ë¶€í„° ìƒëµê°€ëŠ¥í•¨.
         landAnimal.add(new LandAnimal());
         landAnimal.add(new Cat());
         landAnimal.add(new Dog());
-        // landAnimal.add(new Sparrow()); // ¿À·ù°¡ ¹ß»ıÇÔ.
+        // landAnimal.add(new Sparrow()); // ì˜¤ë¥˜ê°€ ë°œìƒí•¨.
         for (int i = 0; i < landAnimal.size() ; i++) {
             landAnimal.get(i).crying();
         }
