@@ -1,0 +1,58 @@
+buildscript {
+	ext {
+		springBootVersion = '2.6.3'
+		swagerVersion = '3.0.0'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'se.magnus.microservices.composite.product'
+version = '1.0.0-SNAPSHOT'
+sourceCompatibility = 1.8
+
+ext {
+	springCloudVersion = "Greenwich.RELEASE"
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation project(':api')
+	implementation project(':util')
+	implementation('org.springframework.boot:spring-boot-starter-actuator')
+	implementation('org.springframework.boot:spring-boot-starter-webflux')
+	implementation('org.springframework.cloud:spring-cloud-starter-stream-rabbit')
+	implementation('org.springframework.cloud:spring-cloud-starter-stream-kafka')
+	//mod5 start
+   	implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'	
+	//mod5 end
+	compileOnly("org.projectlombok:lombok") 
+	testCompileOnly("org.projectlombok:lombok") 
+	annotationProcessor("org.projectlombok:lombok") 
+	testAnnotationProcessor("org.projectlombok:lombok")
+
+	testImplementation('org.springframework.boot:spring-boot-starter-test')
+	testImplementation('org.springframework.cloud:spring-cloud-stream-test-support')
+	testImplementation('io.projectreactor:reactor-test')
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
+//Swagger 3.0.0
+//SwaggerUI 3.0.0
+
