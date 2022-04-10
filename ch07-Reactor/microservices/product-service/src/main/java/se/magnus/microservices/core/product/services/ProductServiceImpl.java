@@ -28,6 +28,7 @@ public class ProductServiceImpl implements ProductService {
 //    public ProductServiceImpl(ServiceUtil serviceUtil) {
 //        this.serviceUtil = serviceUtil;
 //    }
+
     @Autowired
     public ProductServiceImpl(ProductRepository repository, ProductMapper mapper, ServiceUtil serviceUtil) {
         this.repository = repository;
@@ -35,6 +36,7 @@ public class ProductServiceImpl implements ProductService {
         this.serviceUtil = serviceUtil;
     }
     //CH07 END
+
     @Override
 //    public Product getProduct(int productId) {
 //        LOG.debug("/product return the found product for productId={}", productId);

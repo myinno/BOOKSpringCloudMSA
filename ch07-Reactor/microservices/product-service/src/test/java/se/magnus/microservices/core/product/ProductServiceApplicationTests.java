@@ -1,7 +1,8 @@
 package se.magnus.microservices.core.product;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 
@@ -11,13 +12,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.integration.channel.AbstractMessageChannel;
+import org.springframework.messaging.support.GenericMessage;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import reactor.core.publisher.Mono;
 import se.magnus.api.core.product.Product;
+import se.magnus.api.event.Event;
 import se.magnus.microservices.core.product.persistence.ProductRepository;
-
 //@RunWith(SpringRunner.class)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment=RANDOM_PORT)
@@ -29,6 +32,8 @@ public class ProductServiceApplicationTests {
     //ch06 start
 	@Autowired
 	private ProductRepository repository;
+
+	private AbstractMessageChannel input = null;
 	
 	@BeforeEach
 	public void setupDb() {
@@ -51,8 +56,15 @@ public class ProductServiceApplicationTests {
 //            .jsonPath("$.productId").isEqualTo(productId);
 		postAndVerifyProduct(productId, HttpStatus.OK);
 
-		assertTrue(repository.findByProductId(productId).isPresent());
+//		assertTrue(repository.findByProductId(productId).isPresent());
+		assertNull(repository.findByProductId(productId).block());
+		assertEquals(0, (long)repository.count().block());
 
+		sendCreateProductEvent(productId);
+
+		assertNotNull(repository.findByProductId(productId).block());
+		assertEquals(1, (long)repository.count().block());
+		
 		getAndVerifyProduct(productId, HttpStatus.OK)
             .jsonPath("$.productId").isEqualTo(productId);
 	}
@@ -62,13 +74,21 @@ public class ProductServiceApplicationTests {
 
 		int productId = 1;
 
-		postAndVerifyProduct(productId, HttpStatus.OK);
-		assertTrue(repository.findByProductId(productId).isPresent());
+//ch07
+//		postAndVerifyProduct(productId, HttpStatus.OK);
+//		assertTrue(repository.findByProductId(productId).isPresent());
+//
+//		deleteAndVerifyProduct(productId, HttpStatus.OK);
+//		assertFalse(repository.findByProductId(productId).isPresent());
+//
+//		deleteAndVerifyProduct(productId, HttpStatus.OK);
+		sendCreateProductEvent(productId);
+		assertNotNull(repository.findByProductId(productId).block());
 
-		deleteAndVerifyProduct(productId, HttpStatus.OK);
-		assertFalse(repository.findByProductId(productId).isPresent());
+		sendDeleteProductEvent(productId);
+		assertNull(repository.findByProductId(productId).block());
 
-		deleteAndVerifyProduct(productId, HttpStatus.OK);
+		sendDeleteProductEvent(productId);
 	}
 	
 	@Test
@@ -164,4 +184,16 @@ public class ProductServiceApplicationTests {
 			.expectStatus().isEqualTo(expectedStatus)
 			.expectBody();
 	}
+
+	private void sendCreateProductEvent(int productId) {
+		Product product = new Product(productId, "Name " + productId, productId, "SA");
+		Event<Integer, Product> event = new Event(Event.Type.CREATE, productId, product);
+		input.send(new GenericMessage<>(event));
+	}
+
+	private void sendDeleteProductEvent(int productId) {
+		Event<Integer, Product> event = new Event(Event.Type.CREATE, productId, null);
+		input.send(new GenericMessage<>(event));
+	}
+	
 }

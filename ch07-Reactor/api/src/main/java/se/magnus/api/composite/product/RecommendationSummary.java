@@ -7,11 +7,15 @@ import lombok.Data;
 @AllArgsConstructor
 public class RecommendationSummary {
 
-    private int recommendationId;
-    private String author;
-    private int rate;
-    private String content;
-
+//    private int recommendationId;
+//    private String author;
+//    private int rate;
+//    private String content;
+    private final int recommendationId;
+    private final String author;
+    private final int rate;
+    private final String content;
+    
     public RecommendationSummary() {
         this.recommendationId = 0;
         this.author = null;

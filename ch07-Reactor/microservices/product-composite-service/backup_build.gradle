@@ -21,12 +21,12 @@ version = '1.0.0-SNAPSHOT'
 sourceCompatibility = 1.8
 
 ext {
-//	springCloudVersion = "Greenwich.RELEASE"
-	springCloudVersion = "2021.0.0"
+	springCloudVersion = "Greenwich.RELEASE"
 }
 
 repositories {
 	mavenCentral()
+	maven { url 'http://oss.jfrog.org/artifactory/oss-snapshot-local/' }
 }
 
 dependencies {

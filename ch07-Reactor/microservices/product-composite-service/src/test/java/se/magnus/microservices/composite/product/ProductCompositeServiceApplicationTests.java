@@ -88,6 +88,7 @@ public class ProductCompositeServiceApplicationTests {
             .jsonPath("$.message").isEqualTo("INVALID: " + PRODUCT_ID_INVALID);
 	}
 
+	@SuppressWarnings("deprecation")
 	private WebTestClient.BodyContentSpec getAndVerifyProduct(int productId, HttpStatus expectedStatus) {
 		return client.get()
 			.uri("/product-composite/" + productId)

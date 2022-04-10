@@ -145,6 +145,7 @@ public class RecommendationServiceApplicationTests {
 		return getAndVerifyRecommendationsByProductId("?productId=" + productId, expectedStatus);
 	}
 
+	@SuppressWarnings("deprecation")
 	private WebTestClient.BodyContentSpec getAndVerifyRecommendationsByProductId(String productIdQuery, HttpStatus expectedStatus) {
 		return client.get()
 			.uri("/recommendation" + productIdQuery)
@@ -157,11 +158,13 @@ public class RecommendationServiceApplicationTests {
 
 	private void sendCreateRecommendationEvent(int productId, int recommendationId) {
 		Recommendation recommendation = new Recommendation(productId, recommendationId, "Author " + recommendationId, recommendationId, "Content " + recommendationId, "SA");
+		@SuppressWarnings("rawtypes")
 		Event<Integer, Product> event = new Event(CREATE, productId, recommendation);
 		input.send(new GenericMessage<>(event));
 	}
 
 	private void sendDeleteRecommendationEvent(int productId) {
+		@SuppressWarnings("unchecked")
 		Event<Integer, Product> event = new Event(DELETE, productId, null);
 		input.send(new GenericMessage<>(event));
 	}

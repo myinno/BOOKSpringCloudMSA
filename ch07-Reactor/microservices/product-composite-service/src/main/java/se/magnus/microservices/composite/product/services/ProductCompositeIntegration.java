@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.health.Health;
+import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.Output;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.MessageChannel;
@@ -30,6 +31,7 @@ import se.magnus.util.exceptions.InvalidInputException;
 import se.magnus.util.exceptions.NotFoundException;
 import se.magnus.util.http.HttpErrorInfo;
 
+@EnableBinding(ProductCompositeIntegration.MessageSources.class)
 @Component
 public class ProductCompositeIntegration implements ProductService, RecommendationService, ReviewService {
 
@@ -81,10 +83,16 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
         this.mapper = mapper;
         this.messageSources = messageSources;
 
-        productServiceUrl        = "http://" + productServiceHost + ":" + productServicePort + "/product";
-        recommendationServiceUrl = "http://" + recommendationServiceHost + ":" + recommendationServicePort + "/recommendation";
-        reviewServiceUrl         = "http://" + reviewServiceHost + ":" + reviewServicePort + "/review";
+        //ch07
+//        productServiceUrl        = "http://" + productServiceHost + ":" + productServicePort + "/product";
+//        recommendationServiceUrl = "http://" + recommendationServiceHost + ":" + recommendationServicePort + "/recommendation";
+//        reviewServiceUrl         = "http://" + reviewServiceHost + ":" + reviewServicePort + "/review";
 
+        productServiceUrl        = "http://" + productServiceHost + ":" + productServicePort;
+        recommendationServiceUrl = "http://" + recommendationServiceHost + ":" + recommendationServicePort;
+        reviewServiceUrl         = "http://" + reviewServiceHost + ":" + reviewServicePort;
+        //ch07
+        
         LOG.debug("productServiceUrl: {}", productServiceUrl);
         LOG.debug("recommendationServiceUrl: {}", recommendationServiceUrl);
         LOG.debug("reviewServiceUrl: {}", reviewServiceUrl);
@@ -189,14 +197,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
         messageSources.outputReviews().send(MessageBuilder.withPayload(new Event(Type.DELETE, productId, null)).build());
     }
     
-    private Mono<Health> getHealth(String url) {
-        url += "/actuator/health";
-        LOG.debug("Will call the Health API on URL: {}", url);
-        return webClient.get().uri(url).retrieve().bodyToMono(String.class)
-            .map(s -> new Health.Builder().up().build())
-            .onErrorResume(ex -> Mono.just(new Health.Builder().down(ex).build()))
-            .log();
-    }
+
     private Throwable handleException(Throwable ex) {
 
         if (!(ex instanceof WebClientResponseException)) {
@@ -228,4 +229,28 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
             return ex.getMessage();
         }
     }
+    
+//ch07  Start  
+    public Mono<Health> getProductHealth() {
+        return getHealth(productServiceUrl);
+    }
+
+    public Mono<Health> getRecommendationHealth() {
+        return getHealth(recommendationServiceUrl);
+    }
+
+    public Mono<Health> getReviewHealth() {
+        return getHealth(reviewServiceUrl);
+    }
+
+    private Mono<Health> getHealth(String url) {
+        url += "/actuator/health";
+        LOG.debug("Will call the Health API on URL: {}", url);
+        return webClient.get().uri(url).retrieve().bodyToMono(String.class)
+            .map(s -> new Health.Builder().up().build())
+            .onErrorResume(ex -> Mono.just(new Health.Builder().down(ex).build()))
+            .log();
+    }
+    
+  //ch07  End  
 }
