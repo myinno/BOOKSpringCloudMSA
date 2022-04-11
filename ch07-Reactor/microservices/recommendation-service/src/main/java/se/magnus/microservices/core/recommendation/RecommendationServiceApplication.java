@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @SpringBootApplication
 @ComponentScan("se.magnus")
 @EnableMongoRepositories ("se.magnus.microservices.core.recommendation.persistence") 
-@EnableJpaRepositories("seconds47.repository")
+//@EnableJpaRepositories("seconds47.repository")
 public class RecommendationServiceApplication {
 	private static final Logger LOG = LoggerFactory.getLogger(RecommendationServiceApplication.class);
 	
