@@ -5,7 +5,6 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.Output;
@@ -31,6 +30,7 @@ import se.magnus.util.exceptions.InvalidInputException;
 import se.magnus.util.exceptions.NotFoundException;
 import se.magnus.util.http.HttpErrorInfo;
 
+@SuppressWarnings("deprecation")
 @EnableBinding(ProductCompositeIntegration.MessageSources.class)
 @Component
 public class ProductCompositeIntegration implements ProductService, RecommendationService, ReviewService {
@@ -38,17 +38,23 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     private static final Logger LOG = LoggerFactory.getLogger(ProductCompositeIntegration.class);
 
 //    private final RestTemplate restTemplate;
-    private final WebClient webClient;
+//    private final WebClient webClient;
+    private WebClient webClient;
+    
     private final ObjectMapper mapper;
+    private final WebClient.Builder webClientBuilder;
 
-    private final String productServiceUrl;
-    private final String recommendationServiceUrl;
-    private final String reviewServiceUrl;
+//    private final String productServiceUrl;
+//    private final String recommendationServiceUrl;
+//    private final String reviewServiceUrl;
+//
+    private final String productServiceUrl = "http://product";
+    private final String recommendationServiceUrl = "http://recommendation";
+    private final String reviewServiceUrl = "http://review";    
 
     private MessageSources messageSources;
 
     public interface MessageSources {
-
         String OUTPUT_PRODUCTS = "output-products";
         String OUTPUT_RECOMMENDATIONS = "output-recommendations";
         String OUTPUT_REVIEWS = "output-reviews";
@@ -66,20 +72,20 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     @Autowired
     public ProductCompositeIntegration(
 //        RestTemplate restTemplate,
-        WebClient.Builder webClient,
+        WebClient.Builder webClientBuilder,
         ObjectMapper mapper,
-        MessageSources messageSources,
-
-        @Value("${app.product-service.host}") String productServiceHost,
-        @Value("${app.product-service.port}") int    productServicePort,
-
-        @Value("${app.recommendation-service.host}") String recommendationServiceHost,
-        @Value("${app.recommendation-service.port}") int    recommendationServicePort,
-
-        @Value("${app.review-service.host}") String reviewServiceHost,
-        @Value("${app.review-service.port}") int    reviewServicePort
+        MessageSources messageSources
+//        @Value("${app.product-service.host}") String productServiceHost,
+//        @Value("${app.product-service.port}") int    productServicePort,
+//
+//        @Value("${app.recommendation-service.host}") String recommendationServiceHost,
+//        @Value("${app.recommendation-service.port}") int    recommendationServicePort,
+//
+//        @Value("${app.review-service.host}") String reviewServiceHost,
+//        @Value("${app.review-service.port}") int    reviewServicePort
     ) {
-        this.webClient = webClient.build();
+//        this.webClient = webClient.build();
+        this.webClientBuilder = webClientBuilder;
         this.mapper = mapper;
         this.messageSources = messageSources;
 
@@ -88,14 +94,14 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
 //        recommendationServiceUrl = "http://" + recommendationServiceHost + ":" + recommendationServicePort + "/recommendation";
 //        reviewServiceUrl         = "http://" + reviewServiceHost + ":" + reviewServicePort + "/review";
 
-        productServiceUrl        = "http://" + productServiceHost + ":" + productServicePort;
-        recommendationServiceUrl = "http://" + recommendationServiceHost + ":" + recommendationServicePort;
-        reviewServiceUrl         = "http://" + reviewServiceHost + ":" + reviewServicePort;
-        //ch07
-        
-        LOG.debug("productServiceUrl: {}", productServiceUrl);
-        LOG.debug("recommendationServiceUrl: {}", recommendationServiceUrl);
-        LOG.debug("reviewServiceUrl: {}", reviewServiceUrl);
+//        productServiceUrl        = "http://" + productServiceHost + ":" + productServicePort;
+//        recommendationServiceUrl = "http://" + recommendationServiceHost + ":" + recommendationServicePort;
+//        reviewServiceUrl         = "http://" + reviewServiceHost + ":" + reviewServicePort;
+//        //ch07
+//        
+//        LOG.debug("productServiceUrl: {}", productServiceUrl);
+//        LOG.debug("recommendationServiceUrl: {}", recommendationServiceUrl);
+//        LOG.debug("reviewServiceUrl: {}", reviewServiceUrl);
     }
 
     @Override
@@ -135,12 +141,18 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
         String url = productServiceUrl + "/product/" + productId;
         LOG.debug("Will call the getProduct API on URL: {}", url);
 
-        return webClient.get()
-        		.uri(url)
-        		.retrieve()
+//        return webClient.get()
+//        		.uri(url)
+//        		.retrieve()
+//        		.bodyToMono(Product.class)
+//        		.log()
+//        		.onErrorMap(WebClientResponseException.class, ex -> handleException(ex));
+        return getWebClient().get().
+        		uri(url).
+        		retrieve()
         		.bodyToMono(Product.class)
         		.log()
-        		.onErrorMap(WebClientResponseException.class, ex -> handleException(ex));
+        		.onErrorMap(WebClientResponseException.class, ex -> handleException(ex));        
     }
 
     @Override
@@ -251,6 +263,13 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
             .onErrorResume(ex -> Mono.just(new Health.Builder().down(ex).build()))
             .log();
     }
-    
   //ch07  End  
+
+    private WebClient getWebClient() {
+        if (webClient == null) {
+            webClient = webClientBuilder.build();
+        }
+        return webClient;
+    }
+
 }

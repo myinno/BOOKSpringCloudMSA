@@ -29,7 +29,9 @@ import se.magnus.util.exceptions.NotFoundException;
 
 //@RunWith(SpringRunner.class)
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment=RANDOM_PORT)
+// CH09
+//@SpringBootTest(webEnvironment=RANDOM_PORT)
+@SpringBootTest(webEnvironment=RANDOM_PORT, properties = {"eureka.client.enabled=false"})
 public class ProductCompositeServiceApplicationTests {
 
 	private static final int PRODUCT_ID_OK = 1;

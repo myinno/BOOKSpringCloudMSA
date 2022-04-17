@@ -31,7 +31,7 @@ import se.magnus.util.exceptions.InvalidInputException;
 
 //@RunWith(SpringRunner.class)
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment=RANDOM_PORT, properties = {"spring.data.mongodb.port: 0"})
+@SpringBootTest(webEnvironment=RANDOM_PORT, properties = {"spring.data.mongodb.port: 0", "eureka.client.enabled=false"})
 public class RecommendationServiceApplicationTests {
 
 	@Autowired

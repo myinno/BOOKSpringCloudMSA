@@ -21,10 +21,10 @@ import reactor.core.publisher.Mono;
 import se.magnus.api.core.product.Product;
 import se.magnus.api.event.Event;
 import se.magnus.microservices.core.product.persistence.ProductRepository;
+
 //@RunWith(SpringRunner.class)
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment=RANDOM_PORT)
-
+@SpringBootTest(webEnvironment=RANDOM_PORT, properties = {"eureka.client.enabled=false"})
 public class ProductServiceApplicationTests {
 
     @Autowired

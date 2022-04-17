@@ -4,13 +4,13 @@ import static springfox.documentation.spi.DocumentationType.SWAGGER_2;
 
 import java.util.Collections;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -18,7 +18,7 @@ import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 
 @EnableSwagger2
 @SpringBootApplication
@@ -59,6 +59,14 @@ public class ProductCompositeServiceApplication {
                     Collections.emptyList()
                 ));
     }
+// ch09	
+	@Bean
+	@LoadBalanced
+	public WebClient.Builder loadBalancedWebClientBuilder() {
+		final WebClient.Builder builder = WebClient.builder();
+		return builder;
+	}
+// ch09	
 	
 //CH 07 start	
 //	@Bean

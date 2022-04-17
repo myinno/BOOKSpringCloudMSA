@@ -106,6 +106,13 @@ services:
       - SPRING_CLOUD_STREAM_BINDINGS_OUTPUT-REVIEWS_PRODUCER_PARTITION-COUNT=2
     depends_on:
       - kafka
+# ch09 eureka
+  eureka:
+    build: spring-cloud/eureka-server
+    mem_limit: 350m
+    ports:
+      - "8761:8761"
+# ch09 eureka
 
   # $ mongo
   mongodb:

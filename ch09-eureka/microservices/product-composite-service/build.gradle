@@ -36,9 +36,12 @@ dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-webflux')
 	implementation('org.springframework.cloud:spring-cloud-starter-stream-rabbit')
 	implementation('org.springframework.cloud:spring-cloud-starter-stream-kafka')
-	//mod5 start
+
+	// ch09
+    implementation('org.springframework.cloud:spring-cloud-starter-netflix-eureka-client')
+	// ch09
+
    	implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'	
-	//mod5 end
 	compileOnly("org.projectlombok:lombok") 
 	testCompileOnly("org.projectlombok:lombok") 
 	annotationProcessor("org.projectlombok:lombok") 
