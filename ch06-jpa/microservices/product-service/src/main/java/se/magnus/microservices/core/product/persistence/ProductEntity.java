@@ -6,6 +6,10 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection="products")
+//@Data
+//@AllArgsConstructor
+//@NoArgsConstructor
+//@Builder
 public class ProductEntity {
 
     @Id

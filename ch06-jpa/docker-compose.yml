@@ -30,7 +30,7 @@ services:
     build: microservices/product-composite-service
     mem_limit: 350m
     ports:
-      - "8080:8080"
+      - "8081:8081"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     
