@@ -9,22 +9,22 @@ api:
 
     contact:
       name: 이름
-      url: url
+      url: http://msa200.com
       email: myinno@mail.com
 
   product-composite:
     get-composite-product:
       description: 상품정보Return
       notes: |
-        # Normal response
-        If the requested product id is found the method will return information regarding:
-        1. Base product information
-        1. Reviews
-        1. Recommendations
-        1. Service Addresses\n(technical information regarding the addresses of the microservices that created the response)
+        # 정상응답
+        상품정보를 리턴한다:
+        1. 기본 상품 정보
+        1. 리뷰정보
+        1. 추천정보
+        1. 기동한 서버 정보 Address
 
-        # Expected partial and error responses
-        In the following cases, only a partial response be created (used to simplify testing of error conditions)
+        # 주요 오류(설계서에 오류 코드를 정의하면 어떻까?)
+        여기서는 Http 오류 코드 설명(나중에 메시지 코드에 대하여 설명하면 어떻까?)
 
         ## Product id 113
         200 - Ok, but no recommendations will be returned
@@ -32,18 +32,18 @@ api:
         ## Product id 213
         200 - Ok, but no reviews will be returned
 
-        ## Non numerical product id
-        400 - A <b>Bad Request</b> error will be returned
+        ## 상품ID문자입력
+        400 - <b>입력Format오류</b> 
 
         ## Product id 13
-        404 - A <b>Not Found</b> error will be returned
+        404 - <b>해당자료없음</b>
 
-        ## Negative product ids
-        422 - An <b>Unprocessable Entity</b> error will be returned
+        ## 상품정보 음수 입력
+        422 - <b>상품정보 입력 오류</b> 
     create-composite-product:
       description: Creates a composite product
       notes: |
-        # Normal response
+        # 정상응답
         The composite product information posted to the API will be splitted up and stored as separate product-info, recommendation and review entities.
 
         # Expected error responses
@@ -90,15 +90,15 @@ logging:
 ---
 spring.profiles: docker
 
-server.port: 8080
+server.port: 8081
 
 app:
   product-service:
     host: product
-    port: 8080
+    port: 8081
   recommendation-service:
     host: recommendation
-    port: 8080
+    port: 8081
   review-service:
     host: review
-    port: 8080
+    port: 8081
