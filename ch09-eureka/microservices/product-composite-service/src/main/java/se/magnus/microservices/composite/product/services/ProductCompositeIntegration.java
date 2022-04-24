@@ -173,12 +173,23 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
         LOG.debug("Will call the getRecommendations API on URL: {}", url);
 
         // 오류가 발생하더라도 복합 서비스가 부분적인 결과를 반환할 수 있도록 빈 결과를 반환한다
-        return webClient.get()
+//        return webClient.get()
+//        		.uri(url)
+//        		.retrieve()
+//        		.bodyToFlux(Recommendation.class)
+//        		.log()
+//        		.onErrorResume(error -> Flux.empty());
+        
+        // Return an empty result if something goes wrong to make it possible for the composite service to return partial responses
+        return getWebClient().get()
         		.uri(url)
         		.retrieve()
         		.bodyToFlux(Recommendation.class)
         		.log()
         		.onErrorResume(error -> Flux.empty());
+
+
+        
     }
 
     @Override
@@ -198,10 +209,17 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
         String url = reviewServiceUrl + "/review?productId=" + productId;
 
         LOG.debug("Will call the getReviews API on URL: {}", url);
-
+//
+//        // Return an empty result if something goes wrong to make it possible for the composite service to return partial responses
+//        return webClient.get().uri(url).retrieve().bodyToFlux(Review.class).log().onErrorResume(error -> Flux.empty());
         // Return an empty result if something goes wrong to make it possible for the composite service to return partial responses
-        return webClient.get().uri(url).retrieve().bodyToFlux(Review.class).log().onErrorResume(error -> Flux.empty());
-
+        // Return an empty result if something goes wrong to make it possible for the composite service to return partial responses
+        return getWebClient().get()
+        		.uri(url)
+        		.retrieve()
+        		.bodyToFlux(Review.class)
+        		.log()
+        		.onErrorResume(error -> Flux.empty());
     }
 
     @Override
@@ -258,10 +276,11 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     private Mono<Health> getHealth(String url) {
         url += "/actuator/health";
         LOG.debug("Will call the Health API on URL: {}", url);
-        return webClient.get().uri(url).retrieve().bodyToMono(String.class)
-            .map(s -> new Health.Builder().up().build())
-            .onErrorResume(ex -> Mono.just(new Health.Builder().down(ex).build()))
-            .log();
+        return getWebClient().get().uri(url).retrieve().bodyToMono(String.class)
+                .map(s -> new Health.Builder().up().build())
+                .onErrorResume(ex -> Mono.just(new Health.Builder().down(ex).build()))
+                .log();
+
     }
   //ch07  End  
 

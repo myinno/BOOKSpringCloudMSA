@@ -3,60 +3,50 @@ api:
     version: 1.0.0
     title: 달나라까지
     description: 내생애달나라까지
-    termsOfServiceUrl: (termsOfServiceUrl)MINE TERMS OF SERVICE URL
-    license: License(책정리중)
-    licenseUrl: (licenseUrl) MY LICENSE URL
+    termsOfServiceUrl: MINE TERMS OF SERVICE URL
+    license: License
+    licenseUrl: MY LICENSE URL
 
     contact:
       name: 이름
       url: url
-      email: myinno@mail.com
+      email: msa@study.com
 
   product-composite:
     get-composite-product:
       description: 상품정보Return
       notes: |
-        # Normal response
-        If the requested product id is found the method will return information regarding:
-        1. Base product information
-        1. Reviews
-        1. Recommendations
-        1. Service Addresses\n(technical information regarding the addresses of the microservices that created the response)
+        # 정상응답
+        상품 정보 제공:
+        1. 기본 상품정보
+        1. Review 내역
+        1. Service Addresses(인스턴스가 여러개인 경우 처리한 인스턴스 정보)
 
-        # Expected partial and error responses
-        In the following cases, only a partial response be created (used to simplify testing of error conditions)
-
+        # 특이메시지 밑 오류 메시지(실 문서에서는 메시지 코드에 대하여 기술하면)
+        HTTP 주요 응답코드 
         ## Product id 113
-        200 - Ok, but no recommendations will be returned
-
+        200 - Ok, 정상적으로 응답이 되는 경우
         ## Product id 213
-        200 - Ok, but no reviews will be returned
-
-        ## Non numerical product id
-        400 - A <b>Bad Request</b> error will be returned
-
-        ## Product id 13
-        404 - A <b>Not Found</b> error will be returned
-
+        200 - Ok, Review가 없는 Case
+        ## 상품번호 < 0
+        400 - <b>Bad Request</b> 가 발생함
+        ## Product id 13(테스트를 위한 데이터)
+        404 - <b>미등록</b> 이 발생함
         ## Negative product ids
         422 - An <b>Unprocessable Entity</b> error will be returned
     create-composite-product:
-      description: Creates a composite product
+      description: 상품 정보 등록
       notes: |
         # Normal response
         The composite product information posted to the API will be splitted up and stored as separate product-info, recommendation and review entities.
-
         # Expected error responses
         1. If a product with the same productId as specified in the posted information already exists,
            an <b>422 - Unprocessable Entity</b> error with a "duplicate key" error message will be returned
-
     delete-composite-product:
-      description: Deletes a product composite
+      description: 상품정보 삭제
       notes: |
         # Normal response
-        Entities for product information, recommendations and reviews related to the specificed productId will be deleted.
-        The implementation of the delete method is idempotent, i.e. it can be called several times with the same response.
-        This means that a delete request of a non existing product will return <b>200 Ok</b>.
+        주석의 한글 테스트 용.
 
 # swagger 관련
 mvc:
@@ -65,16 +55,33 @@ mvc:
 
 server.port: 7000
 
-app:
-  product-service:
-    host: localhost
-    port: 7001
-  recommendation-service:
-    host: localhost
-    port: 7002
-  review-service:
-    host: localhost
-    port: 7003
+# ch09
+#app:
+#  product-service:
+#    host: localhost
+#    port: 7001
+#  recommendation-service:
+#    host: localhost
+#    port: 7002
+#  review-service:
+#    host: localhost
+#    port: 7003
+spring.application.name: product-composite
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    initialInstanceInfoReplicationIntervalSeconds: 5
+    registryFetchIntervalSeconds: 5
+  instance:
+    leaseRenewalIntervalInSeconds: 5
+    leaseExpirationDurationInSeconds: 5
+
+ribbon.ServerListRefreshInterval: 5000
+ribbon.NFLoadBalancerPingInterval: 5
+# ch09
+
 
 logging:
   level:
@@ -117,21 +124,24 @@ spring.rabbitmq:
 
 management.endpoint.health.show-details: "ALWAYS"
 management.endpoints.web.exposure.include: "*"  
+
 ---
 spring.profiles: docker
-
 server.port: 8080
 
-app:
-  product-service:
-    host: product
-    port: 8080
-  recommendation-service:
-    host: recommendation
-    port: 8080
-  review-service:
-    host: review
-    port: 8080
-    
+#ch09    
+#app:
+#  product-service:
+#    host: product
+#    port: 8080
+#  recommendation-service:
+#    host: recommendation
+#    port: 8080
+##  review-service:
+#    host: review
+#    port: 8080
+eureka.client.serviceUrl.defaultZone: http://eureka:8761/eureka/
+#ch09    
+
 spring.rabbitmq.host: rabbitmq
 spring.cloud.stream.kafka.binder.brokers: kafka
