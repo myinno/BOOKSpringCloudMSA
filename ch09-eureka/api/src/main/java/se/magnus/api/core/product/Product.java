@@ -1,17 +1,10 @@
 package se.magnus.api.core.product;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
-@Data
-@AllArgsConstructor
 public class Product {
-	// 6장에서 각 필드의 final 필드 제거됨
-	// Data는 final 필드에서 setter를 만들지 않는다
-	private int productId;
+    private int productId;
     private String name;
     private int weight;
-    private String serviceAddress;   //msa 서버 주소.
+    private String serviceAddress;
 
     public Product() {
         productId = 0;
@@ -20,26 +13,42 @@ public class Product {
         serviceAddress = null;
     }
 
-//    public Product(int productId, String name, int weight, String serviceAddress) {
-//        this.productId = productId;
-//        this.name = name;
-//        this.weight = weight;
-//        this.serviceAddress = serviceAddress;
-//    }
-//
-//    public int getProductId() {
-//        return productId;
-//    }
-//
-//    public String getName() {
-//        return name;
-//    }
-//
-//    public int getWeight() {
-//        return weight;
-//    }
-//
-//    public String getServiceAddress() {
-//        return serviceAddress;
-//    }
+    public Product(int productId, String name, int weight, String serviceAddress) {
+        this.productId = productId;
+        this.name = name;
+        this.weight = weight;
+        this.serviceAddress = serviceAddress;
+    }
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public String getServiceAddress() {
+        return serviceAddress;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
+
+    public void setServiceAddress(String serviceAddress) {
+        this.serviceAddress = serviceAddress;
+    }
 }

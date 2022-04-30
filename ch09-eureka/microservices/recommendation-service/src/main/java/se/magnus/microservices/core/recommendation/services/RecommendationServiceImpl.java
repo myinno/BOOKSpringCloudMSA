@@ -34,6 +34,7 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     @Override
     public Recommendation createRecommendation(Recommendation body) {
+        LOG.debug("createRecommendation: {}", body);
 
         if (body.getProductId() < 1) throw new InvalidInputException("Invalid productId: " + body.getProductId());
 
@@ -50,6 +51,7 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     @Override
     public Flux<Recommendation> getRecommendations(int productId) {
+        LOG.debug("getRecommendations: {}", productId);
 
         if (productId < 1) throw new InvalidInputException("Invalid productId: " + productId);
 
@@ -61,6 +63,7 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     @Override
     public void deleteRecommendations(int productId) {
+        LOG.debug("deleteRecommendations: {}", productId);
 
         if (productId < 1) throw new InvalidInputException("Invalid productId: " + productId);
 

@@ -1,41 +1,14 @@
 package se.magnus.api.composite.product;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 @Api(description = "REST API for composite product information.")
 public interface ProductCompositeService {
-
-// ch06에서 삭제..	
-//    /**
-//     * Sample usage: curl $HOST:$PORT/product-composite/1
-//     *
-//     * @param productId
-//     * @return the composite product info, if found, else null
-//     */
-//	//mod05 start
-//    @ApiOperation(
-//            value = "${api.product-composite.get-composite-product.description}",
-//            notes = "${api.product-composite.get-composite-product.notes}")
-//        @ApiResponses(value = {
-//            @ApiResponse(code = 400, message = "Bad Request, "),
-//            @ApiResponse(code = 404, message = "Not found, the specified id does not exist."),
-//            @ApiResponse(code = 422, message = "Unprocessable entity, input parameters caused the processing to fails. See response message for more information.")
-//        })
-//	//mod05 end
-//	@GetMapping(
-//        value    = "/product-composite/{productId}",
-//        produces = "application/json")
-//    ProductAggregate getProduct(@PathVariable int productId);
 
     /**
      * Sample usage:
@@ -75,7 +48,6 @@ public interface ProductCompositeService {
     @GetMapping(
         value    = "/product-composite/{productId}",
         produces = "application/json")
-//    ProductAggregate getCompositeProduct(@PathVariable int productId);
     Mono<ProductAggregate> getCompositeProduct(@PathVariable int productId);
 
 
@@ -95,6 +67,4 @@ public interface ProductCompositeService {
     })
     @DeleteMapping(value = "/product-composite/{productId}")
     void deleteCompositeProduct(@PathVariable int productId);
-
-
 }

@@ -56,9 +56,14 @@ public class ProductServiceImpl implements ProductService {
 //        return response;
 //    }
     public Mono<Product> getProduct(int productId) {
-
+    	LOG.debug("getProduct start:", productId);
         if (productId < 1) throw new InvalidInputException("Invalid productId: " + productId);
-
+        
+        Mono<ProductEntity> obj = repository.findByProductId(productId);
+        obj.log();
+    	LOG.debug("getProduct start:2222222222222:" + obj.toString());
+        
+        
         return repository.findByProductId(productId)
             .switchIfEmpty(Mono.error(new NotFoundException("No product found for productId: " + productId)))
             .log()
@@ -70,6 +75,7 @@ public class ProductServiceImpl implements ProductService {
     //CH07 START
     @Override
     public Product createProduct(Product body) {
+    	LOG.debug("createProduct start:", body);
         if (body.getProductId() < 1) throw new InvalidInputException("Invalid productId: " + body.getProductId());
 
         ProductEntity entity = mapper.apiToEntity(body);
