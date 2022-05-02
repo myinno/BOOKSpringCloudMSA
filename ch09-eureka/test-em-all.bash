@@ -145,6 +145,8 @@ assertEqual 1 $(echo $RESPONSE | jq .productId)
 assertEqual 3 $(echo $RESPONSE | jq ".recommendations | length")
 assertEqual 3 $(echo $RESPONSE | jq ".reviews | length")
 
+echo "111111111"
+
 # Verify that a 404 (Not Found) error is returned for a non existing productId (13)
 assertCurl 404 "curl http://$HOST:$PORT/product-composite/13 -s"
 
@@ -153,12 +155,14 @@ assertCurl 200 "curl http://$HOST:$PORT/product-composite/113 -s"
 assertEqual 113 $(echo $RESPONSE | jq .productId)
 assertEqual 0 $(echo $RESPONSE | jq ".recommendations | length")
 assertEqual 3 $(echo $RESPONSE | jq ".reviews | length")
+echo "222222"
 
 # Verify that no reviews are returned for productId 213
 assertCurl 200 "curl http://$HOST:$PORT/product-composite/213 -s"
 assertEqual 213 $(echo $RESPONSE | jq .productId)
 assertEqual 3 $(echo $RESPONSE | jq ".recommendations | length")
 assertEqual 0 $(echo $RESPONSE | jq ".reviews | length")
+echo "333333"
 
 # Verify that a 422 (Unprocessable Entity) error is returned for a productId that is out of range (-1)
 assertCurl 422 "curl http://$HOST:$PORT/product-composite/-1 -s"

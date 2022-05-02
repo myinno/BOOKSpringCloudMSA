@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>spring-cloud</name>
-	<comment>Project spring-cloud created by Buildship.</comment>
+	<name>eureka-server</name>
+	<comment>Project microservices created by Buildship.</comment>
 	<projects>
 	</projects>
 	<buildSpec>
