@@ -73,7 +73,7 @@ function waitForService() {
             echo " Give up"
             exit 1
         else
-            sleep 6
+            sleep 60
             echo -n ", retry #$n "
         fi
     done
@@ -84,6 +84,9 @@ function recreateComposite() {
     local composite=$2
 
     assertCurl 200 "curl -X DELETE http://$HOST:$PORT/product-composite/${productId} -s"
+    
+    echo "$composite"
+    
     curl -X POST http://$HOST:$PORT/product-composite -H "Content-Type: application/json" --data "$composite"
 }
 
@@ -136,23 +139,40 @@ then
 fi
 
 waitForService curl -X DELETE http://$HOST:$PORT/product-composite/13
+waitForService curl -X DELETE http://$HOST:$PORT/product-composite/1
+echo "Step 00"
 
 setupTestdata
+echo "Step 11"
 
 # Verify that a normal request works, expect three recommendations and three reviews
 assertCurl 200 "curl http://$HOST:$PORT/product-composite/1 -s"
+echo "Step 13"
 assertEqual 1 $(echo $RESPONSE | jq .productId)
+echo "Step 14"
 assertEqual 3 $(echo $RESPONSE | jq ".recommendations | length")
+echo "Step 15"
 assertEqual 3 $(echo $RESPONSE | jq ".reviews | length")
+
+echo "Step 22"
 
 # Verify that a 404 (Not Found) error is returned for a non existing productId (13)
 assertCurl 404 "curl http://$HOST:$PORT/product-composite/13 -s"
 
+echo "Step 33"
+
 # Verify that no recommendations are returned for productId 113
 assertCurl 200 "curl http://$HOST:$PORT/product-composite/113 -s"
+echo "Step 41"
+
 assertEqual 113 $(echo $RESPONSE | jq .productId)
+echo "Step 42"
+
 assertEqual 0 $(echo $RESPONSE | jq ".recommendations | length")
+echo "Step 43"
+
 assertEqual 3 $(echo $RESPONSE | jq ".reviews | length")
+echo "Step 44"
 
 # Verify that no reviews are returned for productId 213
 assertCurl 200 "curl http://$HOST:$PORT/product-composite/213 -s"

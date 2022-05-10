@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
+//@AllArgsConstructor
 public class Product {
 	// 6장에서 각 필드의 final 필드 제거됨
 	// Data는 final 필드에서 setter를 만들지 않는다
@@ -20,13 +20,13 @@ public class Product {
         serviceAddress = null;
     }
 
-//    public Product(int productId, String name, int weight, String serviceAddress) {
-//        this.productId = productId;
-//        this.name = name;
-//        this.weight = weight;
-//        this.serviceAddress = serviceAddress;
-//    }
-//
+    public Product(int productId, String name, int weight, String serviceAddress) {
+        this.productId = productId;
+        this.name = name;
+        this.weight = weight;
+        this.serviceAddress = serviceAddress;
+    }
+
 //    public int getProductId() {
 //        return productId;
 //    }
