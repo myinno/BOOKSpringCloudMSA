@@ -1,0 +1,155 @@
+api:
+  common:
+    version: 1.0.0
+    title: 달나라까지
+    description: 내생애달나라까지
+    termsOfServiceUrl: MINE TERMS OF SERVICE URL
+    license: License
+    licenseUrl: MY LICENSE URL
+
+    contact:
+      name: 이름
+      url: url
+      email: msa@study.com
+
+  product-composite:
+    get-composite-product:
+      description: 상품정보Return
+      notes: |
+        # 정상응답
+        상품 정보 제공:
+        1. 기본 상품정보
+        1. Review 내역
+        1. Service Addresses(인스턴스가 여러개인 경우 처리한 인스턴스 정보)
+
+        # 특이메시지 밑 오류 메시지(실 문서에서는 메시지 코드에 대하여 기술하면)
+        HTTP 주요 응답코드 
+        ## Product id 113
+        200 - Ok, 정상적으로 응답이 되는 경우
+        ## Product id 213
+        200 - Ok, Review가 없는 Case
+        ## 상품번호 < 0
+        400 - <b>Bad Request</b> 가 발생함
+        ## Product id 13(테스트를 위한 데이터)
+        404 - <b>미등록</b> 이 발생함
+        ## Negative product ids
+        422 - An <b>Unprocessable Entity</b> error will be returned
+    create-composite-product:
+      description: 상품 정보 등록
+      notes: |
+        # Normal response
+        The composite product information posted to the API will be splitted up and stored as separate product-info, recommendation and review entities.
+        # Expected error responses
+        1. If a product with the same productId as specified in the posted information already exists,
+           an <b>422 - Unprocessable Entity</b> error with a "duplicate key" error message will be returned
+    delete-composite-product:
+      description: 상품정보 삭제
+      notes: |
+        # Normal response
+        주석의 한글 테스트 용.
+
+# swagger 관련
+mvc:
+   pathmatch:
+     matching-strategy: ant_path_matcher
+
+server.port: 7000
+
+# ch09
+#app:
+#  product-service:
+#    host: localhost
+#    port: 7001
+#  recommendation-service:
+#    host: localhost
+#    port: 7002
+#  review-service:
+#    host: localhost
+#    port: 7003
+spring.application.name: product-composite
+#CH10
+app.eureka-server: localhost
+#CH10
+
+eureka:
+  client:
+    serviceUrl:
+#      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://${app.eureka-server}:8761/eureka/
+
+    initialInstanceInfoReplicationIntervalSeconds: 5
+    registryFetchIntervalSeconds: 5
+  instance:
+    leaseRenewalIntervalInSeconds: 5
+    leaseExpirationDurationInSeconds: 5
+
+ribbon.ServerListRefreshInterval: 5000
+ribbon.NFLoadBalancerPingInterval: 5
+# ch09
+
+
+logging:
+  level:
+    root: INFO
+    se.magnus: DEBUG
+  # Output to a file named application.log. 
+#  file:
+#    name: application.log
+#    path: c:\APP  # Output to a file named spring.log in path /Users
+  pattern:
+    file: '%d{dd HH:mm:ss} [%thread] %-5level %logger{10}:%L - %msg%'  ## Logging pattern for file
+
+# 메시지 Stream  ch07
+spring.cloud.stream:
+  defaultBinder: rabbit
+  default.contentType: application/json
+  bindings:
+    output-products:
+      destination: products
+      producer:
+        required-groups: auditGroup
+    output-recommendations:
+      destination: recommendations
+      producer:
+        required-groups: auditGroup
+    output-reviews:
+      destination: reviews
+      producer:
+        required-groups: auditGroup
+
+spring.cloud.stream.kafka.binder:
+  brokers: 127.0.0.1
+  defaultBrokerPort: 9092
+
+spring.rabbitmq:
+  host: 127.0.0.1
+  port: 5672
+  username: guest
+  password: guest
+
+management.endpoint.health.show-details: "ALWAYS"
+management.endpoints.web.exposure.include: "*"  
+
+---
+spring.profiles: docker
+server.port: 8080
+
+#ch09    
+#app:
+#  product-service:
+#    host: product
+#    port: 8080
+#  recommendation-service:
+#    host: recommendation
+#    port: 8080
+##  review-service:
+#    host: review
+#    port: 8080
+eureka.client.serviceUrl.defaultZone: http://eureka:8761/eureka/
+#ch09    
+
+spring.rabbitmq.host: rabbitmq
+spring.cloud.stream.kafka.binder.brokers: kafka
+#CH10
+app.eureka-server: eureka
+#CH10
